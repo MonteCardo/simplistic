@@ -6,6 +6,8 @@ import br.com.montecardo.simplistic.data.Node
 object ItemContract {
     interface PageView {
         fun setListPresenter(presenter: ItemContract.ListPresenter)
+
+        fun select(node: Node)
     }
 
     interface PagePresenter {
@@ -13,7 +15,7 @@ object ItemContract {
 
         fun unsubscribe()
 
-        fun load(listing: Node)
+        fun load(node: Node)
 
         var view: PageView
     }

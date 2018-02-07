@@ -1,17 +1,16 @@
 package br.com.montecardo.simplistic
 
-import android.content.Context
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.util.AttributeSet
-import android.view.View
+import br.com.montecardo.simplistic.data.Node
 import br.com.montecardo.simplistic.data.source.DummyRepository
-import br.com.montecardo.simplistic.item.ItemContract
 import br.com.montecardo.simplistic.item.ItemFragment
 import br.com.montecardo.simplistic.item.ItemPagePresenter
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), ItemFragment.ItemSelectionListener {
+
+    private val repository = DummyRepository()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,7 +19,15 @@ class MainActivity : AppCompatActivity() {
 
         supportFragmentManager
             .beginTransaction()
-            .add(R.id.placeholder, ItemFragment.newInstance(ItemPagePresenter(DummyRepository())))
+            .add(R.id.placeholder, ItemFragment.newInstance(ItemPagePresenter(repository)))
+            .commit()
+    }
+
+    override fun onItemSelection(node: Node) {
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.placeholder, ItemFragment.newInstance(ItemPagePresenter(repository, node)))
+            .addToBackStack(null)
             .commit()
     }
 }

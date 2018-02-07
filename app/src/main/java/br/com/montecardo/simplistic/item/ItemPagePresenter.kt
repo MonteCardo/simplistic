@@ -4,14 +4,20 @@ import android.support.v7.widget.RecyclerView
 import br.com.montecardo.simplistic.data.Node
 import br.com.montecardo.simplistic.data.source.Repository
 
-class ItemPagePresenter(private val repository: Repository) : ItemContract.PagePresenter {
+class ItemPagePresenter(private val repository: Repository,
+                        private val currentNode: Node? = null) :
+    ItemContract.PagePresenter {
 
     private lateinit var presenter: ItemContract.ListPresenter
 
     override lateinit var view: ItemContract.PageView
 
     override fun subscribe() {
-        presenter = ItemListPresenter(repository.getRootItems())
+        val listContent =
+            if (currentNode != null) repository.getSubItems(currentNode)
+            else repository.getRootItems()
+
+        presenter = ItemListPresenter(listContent)
         view.setListPresenter(presenter)
     }
 
@@ -19,9 +25,8 @@ class ItemPagePresenter(private val repository: Repository) : ItemContract.PageP
         // TODO Clear resources
     }
 
-    override fun load(listing: Node) {
-        val subItems = repository.getSubItems(listing)
-        presenter.replaceData(subItems)
+    override fun load(node: Node) {
+        view.select(node)
     }
 
     inner class ItemListPresenter(private var items: List<Node>) :
