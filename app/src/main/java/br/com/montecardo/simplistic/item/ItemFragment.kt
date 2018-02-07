@@ -32,9 +32,15 @@ class ItemFragment : Fragment(), ItemContract.PageView {
         presenter.adapter = adapter
     }
 
-    override fun select(node: Node) {
-        listener.onItemSelection(node)
+    override fun showNodeDescription(show: Boolean) {
+        node_description.visibility = if (show) View.VISIBLE else View.GONE
     }
+
+    override fun setNodeDescription(description: String) {
+        node_description.text = description
+    }
+
+    override fun select(node: Node) = listener.onItemSelection(node)
 
     override fun onResume() {
         super.onResume()

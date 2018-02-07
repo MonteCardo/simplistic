@@ -7,6 +7,10 @@ object ItemContract {
     interface PageView {
         fun setListPresenter(presenter: ItemContract.ListPresenter)
 
+        fun setNodeDescription(description: String)
+
+        fun showNodeDescription(show: Boolean)
+
         fun select(node: Node)
     }
 
