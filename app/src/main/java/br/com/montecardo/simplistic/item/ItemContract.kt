@@ -1,7 +1,7 @@
 package br.com.montecardo.simplistic.item
 
 import android.support.v7.widget.RecyclerView
-import br.com.montecardo.simplistic.data.Item
+import br.com.montecardo.simplistic.data.Node
 
 object ItemContract {
     interface PageView {
@@ -13,7 +13,7 @@ object ItemContract {
 
         fun unsubscribe()
 
-        fun load(listing: Item.Listing)
+        fun load(listing: Node)
 
         var view: PageView
     }
@@ -21,7 +21,7 @@ object ItemContract {
     interface ListPresenter {
         fun bind(holder: ItemView, position: Int)
 
-        fun replaceData(items: List<Item>)
+        fun replaceData(items: List<Node>)
 
         fun getRowCount(): Int
 

@@ -1,6 +1,6 @@
 package br.com.montecardo.simplistic.data.source
 
-import br.com.montecardo.simplistic.data.Item
+import br.com.montecardo.simplistic.data.Node
 
 /**
  * Dummy repository only meant to test the concept
@@ -9,9 +9,9 @@ import br.com.montecardo.simplistic.data.Item
  */
 class DummyRepository : Repository {
 
-    private val itemsMap: Map<Item.Listing, List<Item>>
+    private val itemsMap: Map<Node, List<Node>>
 
-    private val root = Item.Listing(description = "")
+    private val root = Node(description = "")
 
     init {
         val neverSawItComing = root.createList("Awesome SubList")
@@ -40,7 +40,7 @@ class DummyRepository : Repository {
                 multilevelSecSubList to listOf(multilevelSecSubList.createLeaf("Hoisted!")))
     }
 
-    override fun getRootItem() = itemsMap[root]?: emptyList()
+    override fun getRootItems() = getSubItems(root)
 
-    override fun getSubItems(listing: Item.Listing) = itemsMap[listing]
+    override fun getSubItems(node: Node): List<Node> = itemsMap[node]?: emptyList()
 }

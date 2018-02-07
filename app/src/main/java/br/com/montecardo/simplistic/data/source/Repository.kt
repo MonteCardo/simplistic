@@ -1,9 +1,9 @@
 package br.com.montecardo.simplistic.data.source
 
-import br.com.montecardo.simplistic.data.Item
+import br.com.montecardo.simplistic.data.Node
 
 interface Repository {
-    fun getRootItem(): List<Item>
+    fun getRootItems(): List<Node>
 
-    fun getSubItems(listing: Item.Listing): List<Item>?
+    fun getSubItems(node: Node): List<Node>
 }

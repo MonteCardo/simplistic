@@ -1,7 +1,7 @@
 package br.com.montecardo.simplistic.item
 
 import android.support.v7.widget.RecyclerView
-import br.com.montecardo.simplistic.data.Item
+import br.com.montecardo.simplistic.data.Node
 import br.com.montecardo.simplistic.data.source.Repository
 
 class ItemPagePresenter(private val repository: Repository) : ItemContract.PagePresenter {
@@ -11,7 +11,7 @@ class ItemPagePresenter(private val repository: Repository) : ItemContract.PageP
     override lateinit var view: ItemContract.PageView
 
     override fun subscribe() {
-        presenter = ItemListPresenter(repository.getRootItem())
+        presenter = ItemListPresenter(repository.getRootItems())
         view.setListPresenter(presenter)
     }
 
@@ -19,26 +19,22 @@ class ItemPagePresenter(private val repository: Repository) : ItemContract.PageP
         // TODO Clear resources
     }
 
-    override fun load(listing: Item.Listing) {
-        val subItems = repository.getSubItems(listing)?: emptyList()
+    override fun load(listing: Node) {
+        val subItems = repository.getSubItems(listing)
         presenter.replaceData(subItems)
     }
 
-    inner class ItemListPresenter(private var items: List<Item> = emptyList()) :
+    inner class ItemListPresenter(private var items: List<Node>) :
         ItemContract.ListPresenter {
 
         override fun bind(holder: ItemContract.ItemView, position: Int) {
             val item = items[position]
 
             holder.setDescription(item.description)
-
-            when(item) {
-                is Item.Listing -> holder.setOnClickListener { load(item) }
-                is Item.Leaf -> holder.setOnClickListener {  }
-            }
+            holder.setOnClickListener { load(item) }
         }
 
-        override fun replaceData(items: List<Item>) {
+        override fun replaceData(items: List<Node>) {
             this.items = items
             adapter.notifyDataSetChanged()
         }
