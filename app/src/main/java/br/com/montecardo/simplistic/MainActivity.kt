@@ -8,7 +8,7 @@ import br.com.montecardo.simplistic.item.ItemFragment
 import br.com.montecardo.simplistic.item.ItemPagePresenter
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity(), ItemFragment.ItemSelectionListener {
+class MainActivity : AppCompatActivity(), ItemFragment.ItemFragmentListener {
 
     private val repository = DummyRepository()
 
@@ -29,5 +29,9 @@ class MainActivity : AppCompatActivity(), ItemFragment.ItemSelectionListener {
             .replace(R.id.placeholder, ItemFragment.newInstance(ItemPagePresenter(repository, node)))
             .addToBackStack(null)
             .commit()
+    }
+
+    override fun setTabName(name: String?) {
+        toolbar.title = name?: applicationContext.getString(R.string.title_activity_main)
     }
 }

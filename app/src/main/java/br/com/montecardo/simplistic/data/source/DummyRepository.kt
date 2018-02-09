@@ -14,30 +14,30 @@ class DummyRepository : Repository {
     private val root = Node(description = "")
 
     init {
-        val neverSawItComing = root.createList("Awesome SubList")
+        val neverSawItComing = root.createChild("Awesome SubList")
 
-        val emptyList = root.createList("Empty List")
+        val emptyList = root.createChild("Empty List")
 
-        val multilevelFirstSubList = root.createList("Multilevel 1st SubList")
+        val multilevelFirstSubList = root.createChild("Multilevel 1st SubList")
 
-        val multilevelSecSubList = multilevelFirstSubList.createList("Multilevel 2nd SubList")
+        val multilevelSecSubList = multilevelFirstSubList.createChild("Multilevel 2nd SubList")
 
         val multilevelFirstSubListItems = listOf(multilevelSecSubList)
 
         val rootItems = listOf(multilevelFirstSubList,
             neverSawItComing, emptyList,
-            root.createLeaf("Test"))
+            root.createChild("Test"))
 
         val neverSawItComingItems = listOf(
-                neverSawItComing.createLeaf("You'll never see it coming"),
-                neverSawItComing.createLeaf("You'll see that my mind is too fast for eyes"),
-                neverSawItComing.createLeaf("You're done in"),
-                neverSawItComing.createLeaf("By the time it's hit you, your last surprise"))
+                neverSawItComing.createChild("You'll never see it coming"),
+                neverSawItComing.createChild("You'll see that my mind is too fast for eyes"),
+                neverSawItComing.createChild("You're done in"),
+                neverSawItComing.createChild("By the time it's hit you, your last surprise"))
 
         itemsMap = mapOf(root to rootItems,
                 neverSawItComing to neverSawItComingItems,
                 multilevelFirstSubList to multilevelFirstSubListItems,
-                multilevelSecSubList to listOf(multilevelSecSubList.createLeaf("Hoisted!")))
+                multilevelSecSubList to listOf(multilevelSecSubList.createChild("Hoisted!")))
     }
 
     override fun getRootItems() = getSubItems(root)

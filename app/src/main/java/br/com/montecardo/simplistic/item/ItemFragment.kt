@@ -13,9 +13,13 @@ import kotlinx.android.synthetic.main.fragment_item.*
 
 class ItemFragment : Fragment(), ItemContract.PageView {
 
-    interface ItemSelectionListener { fun onItemSelection(node: Node) }
+    interface ItemFragmentListener {
+        fun onItemSelection(node: Node)
 
-    private lateinit var listener: ItemSelectionListener
+        fun setTabName(name: String?)
+    }
+
+    private lateinit var listener: ItemFragmentListener
 
     lateinit var presenter: ItemContract.PagePresenter
 
@@ -32,13 +36,7 @@ class ItemFragment : Fragment(), ItemContract.PageView {
         presenter.adapter = adapter
     }
 
-    override fun showNodeDescription(show: Boolean) {
-        node_description.visibility = if (show) View.VISIBLE else View.GONE
-    }
-
-    override fun setNodeDescription(description: String) {
-        node_description.text = description
-    }
+    override fun setNodeDescription(description: String?) = listener.setTabName(description)
 
     override fun select(node: Node) = listener.onItemSelection(node)
 
@@ -55,8 +53,8 @@ class ItemFragment : Fragment(), ItemContract.PageView {
     override fun onAttach(context: Context?) {
         super.onAttach(context)
 
-        listener = context as? ItemSelectionListener?:
-            throw IllegalArgumentException("Can only be attached to ${ItemSelectionListener::class.simpleName}")
+        listener = context as? ItemFragmentListener ?:
+            throw IllegalArgumentException("Can only be attached to ${ItemFragmentListener::class.simpleName}")
     }
 
     companion object {

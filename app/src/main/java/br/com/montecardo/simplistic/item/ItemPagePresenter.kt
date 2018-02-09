@@ -20,8 +20,7 @@ class ItemPagePresenter(private val repository: Repository,
         presenter = ItemListPresenter(listContent)
         view.setListPresenter(presenter)
 
-        view.showNodeDescription(currentNode != null)
-        if (currentNode != null) view.setNodeDescription(currentNode.description)
+        view.setNodeDescription(currentNode?.description)
     }
 
     override fun unsubscribe() {
