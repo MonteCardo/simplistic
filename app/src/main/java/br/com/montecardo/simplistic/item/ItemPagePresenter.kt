@@ -8,31 +8,36 @@ class ItemPagePresenter(private val repository: Repository,
                         private val currentNode: Node? = null) :
     ItemContract.PagePresenter {
 
-    private lateinit var presenter: ItemContract.ListPresenter
+    private var presenter: ItemContract.ListPresenter? = null
 
-    override lateinit var view: ItemContract.PageView
+    private var view: ItemContract.PageView? = null
 
-    override fun subscribe() {
+    override fun subscribe(view: ItemContract.PageView) {
         val listContent =
             if (currentNode != null) repository.getSubItems(currentNode)
             else repository.getRootItems()
 
-        presenter = ItemListPresenter(listContent)
-        view.setListPresenter(presenter)
+        val presenter = ItemListPresenter(listContent)
+        this.presenter = presenter
+        this.view = view
 
+        view.setListPresenter(presenter)
         view.setNodeDescription(currentNode?.description)
     }
 
     override fun unsubscribe() {
-        // TODO Clear resources
+        presenter?.unsubscribe()
+        view = null
     }
 
     override fun load(node: Node) {
-        view.select(node)
+        view?.select(node)
     }
 
     inner class ItemListPresenter(private var items: List<Node>) :
         ItemContract.ListPresenter {
+
+        private var view: ItemContract.ListView? = null
 
         override fun bind(holder: ItemContract.ItemView, position: Int) {
             val item = items[position]
@@ -43,11 +48,13 @@ class ItemPagePresenter(private val repository: Repository,
 
         override fun replaceData(items: List<Node>) {
             this.items = items
-            adapter.notifyDataSetChanged()
+            view?.reportChange()
         }
 
-        override fun getRowCount() = items.size
+        override fun subscribe(view: ItemContract.ListView) { this.view = view }
 
-        override lateinit var adapter: RecyclerView.Adapter<ItemAdapter.ItemHolder>
+        override fun unsubscribe() { view = null }
+
+        override fun getRowCount() = items.size
     }
 }

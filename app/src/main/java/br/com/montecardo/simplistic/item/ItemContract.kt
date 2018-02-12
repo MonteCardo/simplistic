@@ -13,13 +13,11 @@ object ItemContract {
     }
 
     interface PagePresenter {
-        fun subscribe()
+        fun load(node: Node)
 
         fun unsubscribe()
 
-        fun load(node: Node)
-
-        var view: PageView
+        fun subscribe(view: PageView)
     }
 
     interface ListPresenter {
@@ -29,8 +27,13 @@ object ItemContract {
 
         fun getRowCount(): Int
 
-        // TODO Remove this link to Android library
-        var adapter: RecyclerView.Adapter<ItemAdapter.ItemHolder>
+        fun unsubscribe()
+
+        fun subscribe(view: ListView)
+    }
+
+    interface ListView {
+        fun reportChange()
     }
 
     interface ItemView {

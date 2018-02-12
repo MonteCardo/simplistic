@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -33,7 +34,7 @@ class ItemFragment : Fragment(), ItemContract.PageView {
 
         list_view.layoutManager = LinearLayoutManager(context)
         list_view.adapter = adapter
-        presenter.adapter = adapter
+        presenter.subscribe(adapter)
     }
 
     override fun setNodeDescription(description: String?) = listener.setTabName(description)
@@ -42,7 +43,7 @@ class ItemFragment : Fragment(), ItemContract.PageView {
 
     override fun onResume() {
         super.onResume()
-        presenter.subscribe()
+        presenter.subscribe(this)
     }
 
     override fun onPause() {
@@ -60,12 +61,9 @@ class ItemFragment : Fragment(), ItemContract.PageView {
     companion object {
         @JvmStatic
         fun newInstance(pagePresenter: ItemContract.PagePresenter): ItemFragment {
-            val frag = ItemFragment().apply {
+            return ItemFragment().apply {
                 presenter = pagePresenter
             }
-
-            pagePresenter.view = frag
-            return frag
         }
     }
 }

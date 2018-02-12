@@ -7,8 +7,8 @@ import android.view.ViewGroup
 import br.com.montecardo.simplistic.R
 import kotlinx.android.synthetic.main.item_view.view.*
 
-class ItemAdapter(val presenter: ItemContract.ListPresenter) :
-    RecyclerView.Adapter<ItemAdapter.ItemHolder>() {
+class ItemAdapter(private val presenter: ItemContract.ListPresenter) :
+    RecyclerView.Adapter<ItemAdapter.ItemHolder>(), ItemContract.ListView {
 
     override fun onBindViewHolder(holder: ItemHolder, position: Int) {
         presenter.bind(holder, position)
@@ -22,6 +22,8 @@ class ItemAdapter(val presenter: ItemContract.ListPresenter) :
 
         return ItemHolder(rowView)
     }
+
+    override fun reportChange() = notifyDataSetChanged()
 
     class ItemHolder(view: View) : RecyclerView.ViewHolder(view), ItemContract.ItemView {
         override fun setDescription(description: String) {
