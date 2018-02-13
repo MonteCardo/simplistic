@@ -4,17 +4,20 @@ import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import br.com.montecardo.simplistic.R
 import br.com.montecardo.simplistic.data.Node
+import br.com.montecardo.simplistic.item.ItemContract.PagePresenter
+import br.com.montecardo.simplistic.item.ItemContract.PagePresenter.NodeCreationData
 import kotlinx.android.synthetic.main.fragment_item.*
 
 class ItemFragment : Fragment(), ItemContract.PageView {
 
     interface ItemFragmentListener {
+        var creationListener: (NodeCreationData) -> Unit
+
         fun onItemSelection(node: Node)
 
         fun setTabName(name: String?)
@@ -22,7 +25,7 @@ class ItemFragment : Fragment(), ItemContract.PageView {
 
     private lateinit var listener: ItemFragmentListener
 
-    lateinit var presenter: ItemContract.PagePresenter
+    lateinit var presenter: PagePresenter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -34,7 +37,7 @@ class ItemFragment : Fragment(), ItemContract.PageView {
 
         list_view.layoutManager = LinearLayoutManager(context)
         list_view.adapter = adapter
-        presenter.subscribe(adapter)
+        presenter.onAttach(adapter)
     }
 
     override fun setNodeDescription(description: String?) = listener.setTabName(description)
@@ -43,12 +46,13 @@ class ItemFragment : Fragment(), ItemContract.PageView {
 
     override fun onResume() {
         super.onResume()
-        presenter.subscribe(this)
+        presenter.onAttach(this)
+        listener.creationListener = presenter::generateNode
     }
 
     override fun onPause() {
         super.onPause()
-        presenter.unsubscribe()
+        presenter.onDetach()
     }
 
     override fun onAttach(context: Context?) {
@@ -60,7 +64,7 @@ class ItemFragment : Fragment(), ItemContract.PageView {
 
     companion object {
         @JvmStatic
-        fun newInstance(pagePresenter: ItemContract.PagePresenter): ItemFragment {
+        fun newInstance(pagePresenter: PagePresenter): ItemFragment {
             return ItemFragment().apply {
                 presenter = pagePresenter
             }

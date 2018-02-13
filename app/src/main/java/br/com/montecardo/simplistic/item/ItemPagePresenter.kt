@@ -1,8 +1,8 @@
 package br.com.montecardo.simplistic.item
 
-import android.support.v7.widget.RecyclerView
 import br.com.montecardo.simplistic.data.Node
 import br.com.montecardo.simplistic.data.source.Repository
+import br.com.montecardo.simplistic.item.ItemContract.PagePresenter.NodeCreationData
 
 class ItemPagePresenter(private val repository: Repository,
                         private val currentNode: Node? = null) :
@@ -12,12 +12,8 @@ class ItemPagePresenter(private val repository: Repository,
 
     private var view: ItemContract.PageView? = null
 
-    override fun subscribe(view: ItemContract.PageView) {
-        val listContent =
-            if (currentNode != null) repository.getSubItems(currentNode)
-            else repository.getRootItems()
-
-        val presenter = ItemListPresenter(listContent)
+    override fun onAttach(view: ItemContract.PageView) {
+        val presenter = ItemListPresenter(repository.getSubItems(currentNode))
         this.presenter = presenter
         this.view = view
 
@@ -25,13 +21,20 @@ class ItemPagePresenter(private val repository: Repository,
         view.setNodeDescription(currentNode?.description)
     }
 
-    override fun unsubscribe() {
-        presenter?.unsubscribe()
+    override fun onDetach() {
+        presenter?.onDetach()
         view = null
     }
 
-    override fun load(node: Node) {
+    private fun load(node: Node) {
         view?.select(node)
+    }
+
+    override fun generateNode(data: NodeCreationData) {
+        with(Node(currentNode, data.nodeDescription)) {
+            repository.saveNode(this)
+            presenter?.replaceData(repository.getSubItems(currentNode))
+        }
     }
 
     inner class ItemListPresenter(private var items: List<Node>) :
@@ -51,9 +54,9 @@ class ItemPagePresenter(private val repository: Repository,
             view?.reportChange()
         }
 
-        override fun subscribe(view: ItemContract.ListView) { this.view = view }
+        override fun onAttach(view: ItemContract.ListView) { this.view = view }
 
-        override fun unsubscribe() { view = null }
+        override fun onDetach() { view = null }
 
         override fun getRowCount() = items.size
     }

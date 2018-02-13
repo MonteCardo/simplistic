@@ -9,38 +9,36 @@ import br.com.montecardo.simplistic.data.Node
  */
 class DummyRepository : Repository {
 
-    private val itemsMap: Map<Node, List<Node>>
-
-    private val root = Node(description = "")
+    private val itemsMap: MutableMap<Node?, MutableList<Node>> = mutableMapOf()
 
     init {
-        val neverSawItComing = root.createChild("Awesome SubList")
+        val neverSawItComing = Node(description = "Awesome SubList")
 
-        val emptyList = root.createChild("Empty List")
+        val multilevelFirstSubList = Node(description = "Multilevel 1st SubList")
 
-        val multilevelFirstSubList = root.createChild("Multilevel 1st SubList")
+        val multilevelSecond = multilevelFirstSubList.createChild("Multilevel 2.5nd SubList")
 
-        val multilevelSecSubList = multilevelFirstSubList.createChild("Multilevel 2nd SubList")
+        listOf(
+            Node(description = "Empty List"),
+            Node(description = "Test"),
 
-        val multilevelFirstSubListItems = listOf(multilevelSecSubList)
+            multilevelFirstSubList,
+            multilevelFirstSubList.createChild("Multilevel 2nd SubList"),
 
-        val rootItems = listOf(multilevelFirstSubList,
-            neverSawItComing, emptyList,
-            root.createChild("Test"))
+            multilevelSecond,
+            multilevelSecond.createChild("Hoisted!"),
 
-        val neverSawItComingItems = listOf(
-                neverSawItComing.createChild("You'll never see it coming"),
-                neverSawItComing.createChild("You'll see that my mind is too fast for eyes"),
-                neverSawItComing.createChild("You're done in"),
-                neverSawItComing.createChild("By the time it's hit you, your last surprise"))
-
-        itemsMap = mapOf(root to rootItems,
-                neverSawItComing to neverSawItComingItems,
-                multilevelFirstSubList to multilevelFirstSubListItems,
-                multilevelSecSubList to listOf(multilevelSecSubList.createChild("Hoisted!")))
+            neverSawItComing,
+            neverSawItComing.createChild("You'll never see it coming"),
+            neverSawItComing.createChild("You'll see that my mind is too fast for eyes"),
+            neverSawItComing.createChild("You're done in"),
+            neverSawItComing.createChild("By the time it's hit you, your last surprise")
+        ).forEach { saveNode(it) }
     }
 
-    override fun getRootItems() = getSubItems(root)
+    override fun getSubItems(node: Node?): List<Node> = itemsMap[node]?: emptyList()
 
-    override fun getSubItems(node: Node): List<Node> = itemsMap[node]?: emptyList()
+    override fun saveNode(node: Node) {
+        itemsMap.getOrPut(node.parent) { mutableListOf() }.add(node)
+    }
 }

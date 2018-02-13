@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import br.com.montecardo.simplistic.R
-import kotlinx.android.synthetic.main.item_view.view.*
+import kotlinx.android.synthetic.main.view_item.view.*
 
 class ItemAdapter(private val presenter: ItemContract.ListPresenter) :
     RecyclerView.Adapter<ItemAdapter.ItemHolder>(), ItemContract.ListView {
@@ -18,7 +18,7 @@ class ItemAdapter(private val presenter: ItemContract.ListPresenter) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemHolder {
         val rowView = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_view, parent, false)
+            .inflate(R.layout.view_item, parent, false)
 
         return ItemHolder(rowView)
     }
@@ -30,8 +30,8 @@ class ItemAdapter(private val presenter: ItemContract.ListPresenter) :
             itemView.item_description.text = description
         }
 
-        override fun setOnClickListener(listener: (View) -> Unit) {
-            itemView.setOnClickListener(listener)
+        override fun setOnClickListener(onClickListener: () -> Unit) {
+            itemView.setOnClickListener { onClickListener() }
         }
     }
 }

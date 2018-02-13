@@ -1,10 +1,11 @@
 package br.com.montecardo.simplistic.item
 
-import android.support.v7.widget.RecyclerView
+import br.com.montecardo.simplistic.base.Presenter
+import br.com.montecardo.simplistic.base.View
 import br.com.montecardo.simplistic.data.Node
 
 object ItemContract {
-    interface PageView {
+    interface PageView : View {
         fun setListPresenter(presenter: ItemContract.ListPresenter)
 
         fun setNodeDescription(description: String?)
@@ -12,33 +13,27 @@ object ItemContract {
         fun select(node: Node)
     }
 
-    interface PagePresenter {
-        fun load(node: Node)
+    interface PagePresenter : Presenter<PageView> {
+        data class NodeCreationData(val nodeDescription: String)
 
-        fun unsubscribe()
-
-        fun subscribe(view: PageView)
+        fun generateNode(data: NodeCreationData)
     }
 
-    interface ListPresenter {
+    interface ListPresenter : Presenter<ListView> {
         fun bind(holder: ItemView, position: Int)
 
         fun replaceData(items: List<Node>)
 
         fun getRowCount(): Int
-
-        fun unsubscribe()
-
-        fun subscribe(view: ListView)
     }
 
-    interface ListView {
+    interface ListView : View {
         fun reportChange()
     }
 
-    interface ItemView {
+    interface ItemView : View {
         fun setDescription(description: String)
 
-        fun setOnClickListener(listener: (android.view.View) -> Unit)
+        fun setOnClickListener(onClickListener: () -> Unit)
     }
 }
