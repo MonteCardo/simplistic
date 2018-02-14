@@ -21,4 +21,11 @@ interface Repository {
      * @param node Node to be persisted
      */
     fun saveNode(node: Node)
+
+    /**
+     * Removes the given node and all nodes bellow him
+     *
+     * @param nodeId Id of the node to be removed
+     */
+    fun removeNode(nodeId: Long)
 }

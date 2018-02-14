@@ -2,6 +2,8 @@
     <string name="app_name">Simplistic</string>
     <string name="title_activity_main">Simplistic</string>
     <string name="node_field_description">Descrição</string>
+    <string name="node_removal_confirmation_template">O item \"%1$s\" será deletado.</string>
     <string name="button_cancel">Cancelar</string>
     <string name="button_confirm">OK</string>
+    <string name="node_removal_complete">Item deletado com sucesso</string>
 </resources>

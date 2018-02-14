@@ -32,11 +32,22 @@ class ItemPagePresenter(private val repository: Repository,
         view?.select(nodeId)
     }
 
+    private fun askToRemove(node: Node) {
+        view?.showRemovalDialog(node)
+    }
+
+    private fun refresh() {
+        presenter?.replaceData(repository.getSubItems(nodeId))
+    }
+
     override fun generateNode(data: NodeData) {
-        with(Node(nodeId, data.nodeDescription)) {
-            repository.saveNode(this)
-            presenter?.replaceData(repository.getSubItems(nodeId))
-        }
+        repository.saveNode(Node(nodeId, data.nodeDescription))
+        refresh()
+    }
+
+    override fun removeNode(nodeId: Long) {
+        repository.removeNode(nodeId)
+        refresh()
     }
 
     inner class ItemListPresenter(private var items: List<Node>) :
@@ -48,7 +59,8 @@ class ItemPagePresenter(private val repository: Repository,
             val item = items[position]
 
             holder.setDescription(item.description)
-            holder.setOnClickListener { load(item.id) }
+            holder.setSelectListener { load(item.id) }
+            holder.setRemovalPermissionListener { askToRemove(item) }
         }
 
         override fun replaceData(items: List<Node>) {

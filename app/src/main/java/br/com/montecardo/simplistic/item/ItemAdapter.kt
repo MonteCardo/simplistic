@@ -26,12 +26,20 @@ class ItemAdapter(private val presenter: ItemContract.ListPresenter) :
     override fun reportChange() = notifyDataSetChanged()
 
     class ItemHolder(view: View) : RecyclerView.ViewHolder(view), ItemContract.ItemView {
+
         override fun setDescription(description: String) {
             itemView.item_description.text = description
         }
 
-        override fun setOnClickListener(listener: () -> Unit) {
+        override fun setSelectListener(listener: () -> Unit) {
             itemView.setOnClickListener { listener() }
+        }
+
+        override fun setRemovalPermissionListener(listener: () -> Unit) {
+            itemView.setOnLongClickListener {
+                listener()
+                true
+            }
         }
     }
 }

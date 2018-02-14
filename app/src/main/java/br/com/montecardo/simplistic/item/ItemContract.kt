@@ -21,11 +21,18 @@ object ItemContract {
         fun setDescription(description: String?)
 
         /**
-         * Acts over teh selection of a given node
+         * Acts over the selection of a given node
          *
          * @param nodeId Id of the selected node
          */
         fun select(nodeId: Long)
+
+        /**
+         * Asks for confirmation of deletion of given node
+         *
+         * @param node Node to ask for removal
+         */
+        fun showRemovalDialog(node: Node)
     }
 
     interface PagePresenter : Presenter<PageView> {
@@ -40,6 +47,13 @@ object ItemContract {
          * @param data Information to create the new node
          */
         fun generateNode(data: NodeData)
+
+        /**
+         * Removes a node
+         *
+         * @param nodeId Id of node to be deleted
+         */
+        fun removeNode(nodeId: Long)
     }
 
     interface ListPresenter : Presenter<ListView> {
@@ -80,10 +94,17 @@ object ItemContract {
         fun setDescription(description: String)
 
         /**
-         * Prepares the action that will be executed when the item is clicked
+         * Prepares the action that will be executed when the item is selected
          *
          * @param listener Action to be executed on item selection
          */
-        fun setOnClickListener(listener: () -> Unit)
+        fun setSelectListener(listener: () -> Unit)
+
+        /**
+         * Prepares the action that will be executed when the item is selected for removal
+         *
+         * @param listener Action to be executed on item selection for removal
+         */
+        fun setRemovalPermissionListener(listener: () -> Unit)
     }
 }

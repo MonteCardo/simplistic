@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import br.com.montecardo.simplistic.R
+import br.com.montecardo.simplistic.data.Node
 import br.com.montecardo.simplistic.item.ItemContract.PagePresenter
 import br.com.montecardo.simplistic.item.ItemContract.PagePresenter.NodeData
 import kotlinx.android.synthetic.main.fragment_item.*
@@ -15,7 +16,11 @@ import kotlinx.android.synthetic.main.fragment_item.*
 class ItemFragment : Fragment(), ItemContract.PageView {
 
     interface ItemFragmentListener {
+        var removalListener: (Long) -> Unit
+
         var creationListener: (NodeData) -> Unit
+
+        fun askForRemovalConfirmation(node: Node)
 
         fun onItemSelection(nodeId: Long)
 
@@ -43,9 +48,12 @@ class ItemFragment : Fragment(), ItemContract.PageView {
 
     override fun select(nodeId: Long) = listener.onItemSelection(nodeId)
 
+    override fun showRemovalDialog(node: Node) = listener.askForRemovalConfirmation(node)
+
     override fun onResume() {
         super.onResume()
         presenter.onAttach(this)
+        listener.removalListener = presenter::removeNode
         listener.creationListener = presenter::generateNode
     }
 

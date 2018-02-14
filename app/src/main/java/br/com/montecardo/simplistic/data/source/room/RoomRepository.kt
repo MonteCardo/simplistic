@@ -30,6 +30,10 @@ class RoomRepository(context: Context) : Repository {
 
     override fun saveNode(node: Node) = nodeDao.insertNode(node.toRoom())
 
+    override fun removeNode(nodeId: Long) {
+        nodeDao.deleteNode(nodeId)
+    }
+
     @Database(entities = arrayOf(RoomNode::class), version = 1, exportSchema = false)
     abstract class AppDatabase : RoomDatabase() {
         abstract fun nodeDao(): NodeDao
@@ -43,8 +47,8 @@ class RoomRepository(context: Context) : Repository {
         @Update(onConflict = REPLACE)
         fun updateNode(task: RoomNode)
 
-        @Delete
-        fun deleteNode(task: RoomNode)
+        @Query("delete from node where id = :id")
+        fun deleteNode(id: Long): Int
 
         @Query("select * from node where parent_id = :id")
         fun findNodesByParentId(id: Long): List<RoomNode>

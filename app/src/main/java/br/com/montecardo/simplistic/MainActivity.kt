@@ -1,19 +1,25 @@
 package br.com.montecardo.simplistic
 
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
+import br.com.montecardo.simplistic.data.Node
 import br.com.montecardo.simplistic.data.source.room.RoomRepository
 import br.com.montecardo.simplistic.item.ItemContract.PagePresenter.NodeData
 import br.com.montecardo.simplistic.item.ItemFragment
 import br.com.montecardo.simplistic.item.ItemPagePresenter
 import br.com.montecardo.simplistic.item.NodeCreationDialog
+import br.com.montecardo.simplistic.item.NodeRemovalPermissionDialog
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(),
     ItemFragment.ItemFragmentListener,
-    NodeCreationDialog.NodeCreationListener {
+    NodeCreationDialog.Listener,
+    NodeRemovalPermissionDialog.Listener {
 
     override var creationListener: (NodeData) -> Unit = { }
+
+    override var removalListener: (Long) -> Unit = { }
 
     private val repository = RoomRepository(this)
 
@@ -28,8 +34,14 @@ class MainActivity : AppCompatActivity(),
             .commit()
 
         add_fab.setOnClickListener {
-            NodeCreationDialog().show(supportFragmentManager, NodeCreationDialog::class.simpleName)
+            NodeCreationDialog()
+                .show(supportFragmentManager, NodeCreationDialog::class.simpleName)
         }
+    }
+
+    override fun askForRemovalConfirmation(node: Node) {
+        NodeRemovalPermissionDialog.newInstance(node.description, node.id)
+            .show(supportFragmentManager, NodeRemovalPermissionDialog::class.simpleName)
     }
 
     override fun onItemSelection(nodeId: Long) {
@@ -40,11 +52,14 @@ class MainActivity : AppCompatActivity(),
             .commit()
     }
 
-    override fun onDialogPositiveClick(nodeData: NodeData) {
-        creationListener(nodeData)
-    }
+    override fun onCreateNode(nodeData: NodeData) = creationListener(nodeData)
 
-    override fun onDialogNegativeClick() { }
+    override fun removeNode(nodeId: Long) {
+        removalListener(nodeId)
+        Snackbar.make(main_layout,
+            getString(R.string.node_removal_complete),
+            Snackbar.LENGTH_SHORT).show()
+    }
 
     override fun setTabName(name: String?) {
         toolbar.title = name?: applicationContext.getString(R.string.title_activity_main)

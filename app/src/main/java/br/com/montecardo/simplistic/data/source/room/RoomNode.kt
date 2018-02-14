@@ -11,7 +11,7 @@ import br.com.montecardo.simplistic.data.Node
     foreignKeys = arrayOf(ForeignKey(entity = RoomNode::class,
     parentColumns = arrayOf("id"),
     childColumns = arrayOf("parent_id"),
-    onDelete = ForeignKey.NO_ACTION)))
+    onDelete = ForeignKey.CASCADE)))
 data class RoomNode(@ColumnInfo(name = "id") @PrimaryKey(autoGenerate = true) var id: Long = 0,
 
                @ColumnInfo(name = "parent_id") var parentId: Long?,

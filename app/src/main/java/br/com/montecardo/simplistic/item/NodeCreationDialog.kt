@@ -15,41 +15,35 @@ import kotlinx.android.synthetic.main.dialog_node.*
  * Created by gabryel on 12/02/18.
  */
 class NodeCreationDialog : DialogFragment() {
-    interface NodeCreationListener {
-        fun onDialogPositiveClick(nodeData: NodeData)
-
-        fun onDialogNegativeClick()
+    interface Listener {
+        fun onCreateNode(nodeData: NodeData)
     }
 
-    private lateinit var invAddCreationListener: NodeCreationListener
+    private lateinit var listener: Listener
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val activity = this.activity?: throw IllegalStateException()
         val view = activity.layoutInflater.inflate(R.layout.dialog_node, null)
 
         return AlertDialog.Builder(activity).setView(view)
-            .setNegativeButton(getString(R.string.button_cancel), { _, _ -> cancel() } )
+            .setNegativeButton(getString(R.string.button_cancel), { _, _ -> } )
             .setPositiveButton(getString(R.string.button_confirm), { _, _ -> confirm() } )
             .create()
-    }
-
-    private fun cancel() {
-        invAddCreationListener.onDialogNegativeClick()
     }
 
     private fun confirm() {
         val desc = dialog.node_dlg_description.text.toString()
 
-        invAddCreationListener.onDialogPositiveClick(NodeData(desc))
+        listener.onCreateNode(NodeData(desc))
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
 
-        invAddCreationListener = try {
-            context as NodeCreationListener
+        listener = try {
+            context as Listener
         } catch (ex: ClassCastException) {
-            throw ClassCastException("${context::class.simpleName} must implement NodeCreationListener")
+            throw ClassCastException("${context::class.simpleName} must implement Listener")
         }
     }
 }
