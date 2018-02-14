@@ -2,9 +2,8 @@ package br.com.montecardo.simplistic
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import br.com.montecardo.simplistic.data.Node
-import br.com.montecardo.simplistic.data.source.DummyRepository
-import br.com.montecardo.simplistic.item.ItemContract.PagePresenter.NodeCreationData
+import br.com.montecardo.simplistic.data.source.room.RoomRepository
+import br.com.montecardo.simplistic.item.ItemContract.PagePresenter.NodeData
 import br.com.montecardo.simplistic.item.ItemFragment
 import br.com.montecardo.simplistic.item.ItemPagePresenter
 import br.com.montecardo.simplistic.item.NodeCreationDialog
@@ -14,9 +13,9 @@ class MainActivity : AppCompatActivity(),
     ItemFragment.ItemFragmentListener,
     NodeCreationDialog.NodeCreationListener {
 
-    override var creationListener: (NodeCreationData) -> Unit = { }
+    override var creationListener: (NodeData) -> Unit = { }
 
-    private val repository = DummyRepository()
+    private val repository = RoomRepository(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,15 +32,15 @@ class MainActivity : AppCompatActivity(),
         }
     }
 
-    override fun onItemSelection(node: Node) {
+    override fun onItemSelection(nodeId: Long) {
         supportFragmentManager
             .beginTransaction()
-            .replace(R.id.placeholder, ItemFragment.newInstance(ItemPagePresenter(repository, node)))
+            .replace(R.id.placeholder, ItemFragment.newInstance(ItemPagePresenter(repository, nodeId)))
             .addToBackStack(null)
             .commit()
     }
 
-    override fun onDialogPositiveClick(nodeData: NodeCreationData) {
+    override fun onDialogPositiveClick(nodeData: NodeData) {
         creationListener(nodeData)
     }
 

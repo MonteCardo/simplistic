@@ -30,8 +30,8 @@ class ItemAdapter(private val presenter: ItemContract.ListPresenter) :
             itemView.item_description.text = description
         }
 
-        override fun setOnClickListener(onClickListener: () -> Unit) {
-            itemView.setOnClickListener { onClickListener() }
+        override fun setOnClickListener(listener: () -> Unit) {
+            itemView.setOnClickListener { listener() }
         }
     }
 }

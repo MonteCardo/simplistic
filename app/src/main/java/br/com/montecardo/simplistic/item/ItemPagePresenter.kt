@@ -2,23 +2,25 @@ package br.com.montecardo.simplistic.item
 
 import br.com.montecardo.simplistic.data.Node
 import br.com.montecardo.simplistic.data.source.Repository
-import br.com.montecardo.simplistic.item.ItemContract.PagePresenter.NodeCreationData
+import br.com.montecardo.simplistic.item.ItemContract.PagePresenter.NodeData
 
 class ItemPagePresenter(private val repository: Repository,
-                        private val currentNode: Node? = null) :
+                        private val nodeId: Long? = null) :
     ItemContract.PagePresenter {
 
     private var presenter: ItemContract.ListPresenter? = null
 
     private var view: ItemContract.PageView? = null
 
+    private val currentNode = repository.getNode(nodeId)
+
     override fun onAttach(view: ItemContract.PageView) {
-        val presenter = ItemListPresenter(repository.getSubItems(currentNode))
+        val presenter = ItemListPresenter(repository.getSubItems(nodeId))
         this.presenter = presenter
         this.view = view
 
-        view.setListPresenter(presenter)
-        view.setNodeDescription(currentNode?.description)
+        view.bindListPresenter(presenter)
+        view.setDescription(currentNode?.description)
     }
 
     override fun onDetach() {
@@ -26,14 +28,14 @@ class ItemPagePresenter(private val repository: Repository,
         view = null
     }
 
-    private fun load(node: Node) {
-        view?.select(node)
+    private fun load(nodeId: Long) {
+        view?.select(nodeId)
     }
 
-    override fun generateNode(data: NodeCreationData) {
-        with(Node(currentNode, data.nodeDescription)) {
+    override fun generateNode(data: NodeData) {
+        with(Node(nodeId, data.nodeDescription)) {
             repository.saveNode(this)
-            presenter?.replaceData(repository.getSubItems(currentNode))
+            presenter?.replaceData(repository.getSubItems(nodeId))
         }
     }
 
@@ -46,7 +48,7 @@ class ItemPagePresenter(private val repository: Repository,
             val item = items[position]
 
             holder.setDescription(item.description)
-            holder.setOnClickListener { load(item) }
+            holder.setOnClickListener { load(item.id) }
         }
 
         override fun replaceData(items: List<Node>) {

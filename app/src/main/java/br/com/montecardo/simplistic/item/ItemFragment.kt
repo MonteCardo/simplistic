@@ -8,17 +8,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import br.com.montecardo.simplistic.R
-import br.com.montecardo.simplistic.data.Node
 import br.com.montecardo.simplistic.item.ItemContract.PagePresenter
-import br.com.montecardo.simplistic.item.ItemContract.PagePresenter.NodeCreationData
+import br.com.montecardo.simplistic.item.ItemContract.PagePresenter.NodeData
 import kotlinx.android.synthetic.main.fragment_item.*
 
 class ItemFragment : Fragment(), ItemContract.PageView {
 
     interface ItemFragmentListener {
-        var creationListener: (NodeCreationData) -> Unit
+        var creationListener: (NodeData) -> Unit
 
-        fun onItemSelection(node: Node)
+        fun onItemSelection(nodeId: Long)
 
         fun setTabName(name: String?)
     }
@@ -32,7 +31,7 @@ class ItemFragment : Fragment(), ItemContract.PageView {
         return inflater.inflate(R.layout.fragment_item, container, false)
     }
 
-    override fun setListPresenter(presenter: ItemContract.ListPresenter) {
+    override fun bindListPresenter(presenter: ItemContract.ListPresenter) {
         val adapter = ItemAdapter(presenter)
 
         list_view.layoutManager = LinearLayoutManager(context)
@@ -40,9 +39,9 @@ class ItemFragment : Fragment(), ItemContract.PageView {
         presenter.onAttach(adapter)
     }
 
-    override fun setNodeDescription(description: String?) = listener.setTabName(description)
+    override fun setDescription(description: String?) = listener.setTabName(description)
 
-    override fun select(node: Node) = listener.onItemSelection(node)
+    override fun select(nodeId: Long) = listener.onItemSelection(nodeId)
 
     override fun onResume() {
         super.onResume()

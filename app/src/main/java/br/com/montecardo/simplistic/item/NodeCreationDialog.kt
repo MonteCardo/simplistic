@@ -6,7 +6,7 @@ import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.support.v7.app.AlertDialog
 import br.com.montecardo.simplistic.R
-import br.com.montecardo.simplistic.item.ItemContract.PagePresenter.NodeCreationData
+import br.com.montecardo.simplistic.item.ItemContract.PagePresenter.NodeData
 import kotlinx.android.synthetic.main.dialog_node.*
 
 /**
@@ -16,7 +16,7 @@ import kotlinx.android.synthetic.main.dialog_node.*
  */
 class NodeCreationDialog : DialogFragment() {
     interface NodeCreationListener {
-        fun onDialogPositiveClick(nodeData: NodeCreationData)
+        fun onDialogPositiveClick(nodeData: NodeData)
 
         fun onDialogNegativeClick()
     }
@@ -40,7 +40,7 @@ class NodeCreationDialog : DialogFragment() {
     private fun confirm() {
         val desc = dialog.node_dlg_description.text.toString()
 
-        invAddCreationListener.onDialogPositiveClick(NodeCreationData(desc))
+        invAddCreationListener.onDialogPositiveClick(NodeData(desc))
     }
 
     override fun onAttach(context: Context) {
