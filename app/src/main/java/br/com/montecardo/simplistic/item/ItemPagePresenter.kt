@@ -2,25 +2,30 @@ package br.com.montecardo.simplistic.item
 
 import br.com.montecardo.simplistic.data.Node
 import br.com.montecardo.simplistic.data.source.Repository
+import br.com.montecardo.simplistic.di.ActivityScoped
 import br.com.montecardo.simplistic.item.ItemContract.PagePresenter.NodeData
+import javax.inject.Inject
 
-class ItemPagePresenter(private val repository: Repository,
-                        private val nodeId: Long? = null) :
+@ActivityScoped
+class ItemPagePresenter @Inject constructor(private val repository: Repository) :
     ItemContract.PagePresenter {
 
     private var presenter: ItemContract.ListPresenter? = null
 
     private var view: ItemContract.PageView? = null
 
-    private val currentNode = repository.getNode(nodeId)
+    private var nodeId: Long? = null
 
-    override fun onAttach(view: ItemContract.PageView) {
-        val presenter = ItemListPresenter(repository.getSubItems(nodeId))
-        this.presenter = presenter
+    override fun onAttach(view: ItemContract.PageView, state: ItemContract.PageState) {
         this.view = view
+        nodeId = state.nodeId
+        val node = repository.getNode(nodeId)
+        view.setDescription(node?.description)
 
-        view.bindListPresenter(presenter)
-        view.setDescription(currentNode?.description)
+        with(ItemListPresenter(repository.getSubItems(nodeId))) {
+            presenter = this
+            view.bindListPresenter(this)
+        }
     }
 
     override fun onDetach() {

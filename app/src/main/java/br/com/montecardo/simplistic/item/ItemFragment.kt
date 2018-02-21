@@ -2,18 +2,22 @@ package br.com.montecardo.simplistic.item
 
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import br.com.montecardo.simplistic.R
 import br.com.montecardo.simplistic.data.Node
+import br.com.montecardo.simplistic.di.ActivityScoped
+import br.com.montecardo.simplistic.ext.getNullableLong
 import br.com.montecardo.simplistic.item.ItemContract.PagePresenter
 import br.com.montecardo.simplistic.item.ItemContract.PagePresenter.NodeData
+import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_item.*
+import javax.inject.Inject
 
-class ItemFragment : Fragment(), ItemContract.PageView {
+@ActivityScoped
+class ItemFragment : DaggerFragment(), ItemContract.PageView {
 
     interface ItemFragmentListener {
         var removalListener: (Long) -> Unit
@@ -29,7 +33,7 @@ class ItemFragment : Fragment(), ItemContract.PageView {
 
     private lateinit var listener: ItemFragmentListener
 
-    lateinit var presenter: PagePresenter
+    @Inject lateinit var presenter: PagePresenter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -52,7 +56,9 @@ class ItemFragment : Fragment(), ItemContract.PageView {
 
     override fun onResume() {
         super.onResume()
-        presenter.onAttach(this)
+        val nodeId = arguments.getNullableLong(NODE_ID_KEY)
+
+        presenter.onAttach(this, ItemContract.PageState(nodeId))
         listener.removalListener = presenter::removeNode
         listener.creationListener = presenter::generateNode
     }
@@ -70,10 +76,14 @@ class ItemFragment : Fragment(), ItemContract.PageView {
     }
 
     companion object {
+        val NODE_ID_KEY = "NODE_ID"
+
         @JvmStatic
-        fun newInstance(pagePresenter: PagePresenter): ItemFragment {
+        fun newInstance(nodeId: Long?): ItemFragment {
             return ItemFragment().apply {
-                presenter = pagePresenter
+                arguments = Bundle().apply {
+                    if (nodeId != null) putLong(NODE_ID_KEY, nodeId)
+                }
             }
         }
     }

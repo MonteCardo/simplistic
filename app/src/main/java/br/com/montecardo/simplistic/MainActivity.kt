@@ -2,17 +2,15 @@ package br.com.montecardo.simplistic
 
 import android.os.Bundle
 import android.support.design.widget.Snackbar
-import android.support.v7.app.AppCompatActivity
 import br.com.montecardo.simplistic.data.Node
-import br.com.montecardo.simplistic.data.source.room.RoomRepository
 import br.com.montecardo.simplistic.item.ItemContract.PagePresenter.NodeData
 import br.com.montecardo.simplistic.item.ItemFragment
-import br.com.montecardo.simplistic.item.ItemPagePresenter
 import br.com.montecardo.simplistic.item.NodeCreationDialog
 import br.com.montecardo.simplistic.item.NodeRemovalPermissionDialog
+import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity(),
+class MainActivity : DaggerAppCompatActivity(),
     ItemFragment.ItemFragmentListener,
     NodeCreationDialog.Listener,
     NodeRemovalPermissionDialog.Listener {
@@ -21,17 +19,17 @@ class MainActivity : AppCompatActivity(),
 
     override var removalListener: (Long) -> Unit = { }
 
-    private val repository = RoomRepository(this)
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
-        supportFragmentManager
-            .beginTransaction()
-            .add(R.id.placeholder, ItemFragment.newInstance(ItemPagePresenter(repository)))
-            .commit()
+        if (supportFragmentManager.findFragmentById(R.id.placeholder) == null) {
+            supportFragmentManager
+                .beginTransaction()
+                .add(R.id.placeholder, ItemFragment.newInstance(null))
+                .commit()
+        }
 
         add_fab.setOnClickListener {
             NodeCreationDialog()
@@ -47,7 +45,7 @@ class MainActivity : AppCompatActivity(),
     override fun onItemSelection(nodeId: Long) {
         supportFragmentManager
             .beginTransaction()
-            .replace(R.id.placeholder, ItemFragment.newInstance(ItemPagePresenter(repository, nodeId)))
+            .replace(R.id.placeholder, ItemFragment.newInstance(nodeId))
             .addToBackStack(null)
             .commit()
     }

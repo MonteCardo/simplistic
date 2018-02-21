@@ -26,7 +26,7 @@ class NodeCreationDialog : DialogFragment() {
         val view = activity.layoutInflater.inflate(R.layout.dialog_node, null)
 
         return AlertDialog.Builder(activity).setView(view)
-            .setNegativeButton(getString(R.string.button_cancel), { _, _ -> } )
+            .setNegativeButton(getString(R.string.button_cancel), null)
             .setPositiveButton(getString(R.string.button_confirm), { _, _ -> confirm() } )
             .create()
     }

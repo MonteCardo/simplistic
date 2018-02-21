@@ -1,10 +1,15 @@
 package br.com.montecardo.simplistic.item
 
+import br.com.montecardo.simplistic.base.PersistentPresenter
 import br.com.montecardo.simplistic.base.Presenter
+import br.com.montecardo.simplistic.base.State
 import br.com.montecardo.simplistic.base.View
 import br.com.montecardo.simplistic.data.Node
 
 object ItemContract {
+
+    data class PageState(val nodeId: Long?) : State
+
     interface PageView : View {
         /**
          * Binds list presenter to the view
@@ -35,7 +40,7 @@ object ItemContract {
         fun showRemovalDialog(node: Node)
     }
 
-    interface PagePresenter : Presenter<PageView> {
+    interface PagePresenter : PersistentPresenter<PageView, PageState> {
         /**
          * Data class that declares the needed info to create a new node
          */
