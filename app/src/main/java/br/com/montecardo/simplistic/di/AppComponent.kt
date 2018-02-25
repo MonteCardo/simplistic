@@ -17,10 +17,6 @@ ActivityBindingModule::class,
 AndroidSupportInjectionModule::class])
 interface AppComponent : AndroidInjector<SimplisticApp> {
 
-//    fun inject(mainActivity: MainActivity)
-//
-//    fun inject(itemPage: ItemContract.PageView)
-
     @Component.Builder
     interface Builder {
 

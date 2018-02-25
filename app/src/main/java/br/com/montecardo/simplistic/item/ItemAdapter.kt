@@ -5,16 +5,24 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import br.com.montecardo.simplistic.R
+import br.com.montecardo.simplistic.data.Node
 import kotlinx.android.synthetic.main.view_item.view.*
 
 class ItemAdapter(private val presenter: ItemContract.ListPresenter) :
     RecyclerView.Adapter<ItemAdapter.ItemHolder>(), ItemContract.ListView {
 
+    private var list: List<Node> = emptyList()
+
     override fun onBindViewHolder(holder: ItemHolder, position: Int) {
-        presenter.bind(holder, position)
+        presenter.bind(holder, list[position])
     }
 
-    override fun getItemCount() = presenter.getRowCount()
+    override fun getItemCount() = list.size
+
+    override fun replaceData(items: List<Node>) {
+        list = items
+        notifyDataSetChanged()
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemHolder {
         val rowView = LayoutInflater.from(parent.context)
@@ -22,8 +30,6 @@ class ItemAdapter(private val presenter: ItemContract.ListPresenter) :
 
         return ItemHolder(rowView)
     }
-
-    override fun reportChange() = notifyDataSetChanged()
 
     class ItemHolder(view: View) : RecyclerView.ViewHolder(view), ItemContract.ItemView {
 

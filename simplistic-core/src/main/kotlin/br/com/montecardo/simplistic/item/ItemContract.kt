@@ -62,32 +62,31 @@ object ItemContract {
     }
 
     interface ListPresenter : Presenter<ListView> {
+
         /**
-         * Bind the item on the given position to the given view
+         * Binds the given item to the given view
          *
          * @param holder View that will carry the needed info
-         * @param position Position of the item internally
+         * @param item Item to be bound to view
          */
-        fun bind(holder: ItemView, position: Int)
+        fun bind(holder: ItemView, item: Node)
 
         /**
          * Replaces the current list with a new one
          *
-         * @param items New list
+         * @param items List to be used from now on
          */
         fun replaceData(items: List<Node>)
-
-        /**
-         * @return Count of items in the presenter
-         */
-        fun getRowCount(): Int
     }
 
     interface ListView : View {
+
         /**
-         * Reports that the view should reset its contents
+         * Replaces the current list with a new one
+         *
+         * @param items List to be used from now on
          */
-        fun reportChange()
+        fun replaceData(items: List<Node>)
     }
 
     interface ItemView : View {

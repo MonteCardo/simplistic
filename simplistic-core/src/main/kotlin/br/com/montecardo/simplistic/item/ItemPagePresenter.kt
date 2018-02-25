@@ -2,12 +2,9 @@ package br.com.montecardo.simplistic.item
 
 import br.com.montecardo.simplistic.data.Node
 import br.com.montecardo.simplistic.data.source.Repository
-import br.com.montecardo.simplistic.di.ActivityScoped
 import br.com.montecardo.simplistic.item.ItemContract.PagePresenter.NodeData
-import javax.inject.Inject
 
-@ActivityScoped
-class ItemPagePresenter @Inject constructor(private val repository: Repository) :
+class ItemPagePresenter(private val repository: Repository) :
     ItemContract.PagePresenter {
 
     private var presenter: ItemContract.ListPresenter? = null
@@ -55,28 +52,28 @@ class ItemPagePresenter @Inject constructor(private val repository: Repository) 
         refresh()
     }
 
-    inner class ItemListPresenter(private var items: List<Node>) :
-        ItemContract.ListPresenter {
+    inner class ItemListPresenter(private var items: List<Node> = emptyList()) : ItemContract.ListPresenter {
 
         private var view: ItemContract.ListView? = null
 
-        override fun bind(holder: ItemContract.ItemView, position: Int) {
-            val item = items[position]
-
+        override fun bind(holder: ItemContract.ItemView, item: Node) {
             holder.setDescription(item.description)
             holder.setSelectListener { load(item.id) }
             holder.setRemovalPermissionListener { askToRemove(item) }
         }
 
+        private fun refresh() = view?.replaceData(items)
+
         override fun replaceData(items: List<Node>) {
             this.items = items
-            view?.reportChange()
+            refresh()
         }
 
-        override fun onAttach(view: ItemContract.ListView) { this.view = view }
+        override fun onAttach(view: ItemContract.ListView) {
+            this.view = view
+            refresh()
+        }
 
         override fun onDetach() { view = null }
-
-        override fun getRowCount() = items.size
     }
 }

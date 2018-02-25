@@ -25,7 +25,7 @@ class RoomRepository(context: Context) : Repository {
     }
 
     override fun getNode(nodeId: Long?) =
-        if (nodeId != null) nodeDao.findNodebyId(nodeId)?.toCore() else null
+        if (nodeId != null) nodeDao.findNodeById(nodeId)?.toCore() else null
 
     override fun saveNode(node: Node) = nodeDao.insertNode(node.toRoom())
 
@@ -56,6 +56,6 @@ class RoomRepository(context: Context) : Repository {
         fun findRootNodes(): List<RoomNode>
 
         @Query("select * from node where id = :id")
-        fun findNodebyId(id: Long): RoomNode?
+        fun findNodeById(id: Long): RoomNode?
     }
 }
