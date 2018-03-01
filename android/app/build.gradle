@@ -52,5 +52,5 @@ dependencies {
     kapt 'com.google.dagger:dagger-compiler:2.11'
     compileOnly 'javax.annotation:jsr250-api:1.0'
 
-    implementation project(path: ':simplistic-core')
+    implementation project(path: ':core')
 }

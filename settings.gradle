@@ -1,1 +1,1 @@
-include ':app', ':simplistic-core', 'simplistic-desktop'
+include ':android', ':android:app', ':core', ':desktop'

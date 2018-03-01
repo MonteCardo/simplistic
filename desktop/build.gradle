@@ -16,7 +16,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
 
     implementation 'no.tornado:tornadofx:1.7.15'
-    compile project(path: ':simplistic-core')
+    implementation project(path: ':core')
 }
 
 sourceSets {
