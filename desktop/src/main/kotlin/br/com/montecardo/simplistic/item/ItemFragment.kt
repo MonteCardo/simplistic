@@ -4,7 +4,7 @@ import br.com.montecardo.simplistic.data.Node
 import br.com.montecardo.simplistic.data.source.DummyRepository
 import tornadofx.*
 
-class ItemFragment : Fragment(), ItemContract.PageView {
+class ItemFragment : Fragment(), ItemContract.PageView, ItemListView.Listener {
 
     private val presenter = ItemPagePresenter(DummyRepository())
 
@@ -25,7 +25,7 @@ class ItemFragment : Fragment(), ItemContract.PageView {
     }
 
     override fun bindListPresenter(presenter: ItemContract.ListPresenter) {
-        val view = listView ?: ItemListView(root, presenter)
+        val view = listView ?: ItemListView(this, presenter)
         listView = view
         presenter.onAttach(view)
     }
@@ -41,4 +41,7 @@ class ItemFragment : Fragment(), ItemContract.PageView {
     override fun showRemovalDialog(node: Node) {
         throw UnsupportedOperationException("not implemented")
     }
+
+    override fun createNode(node: ItemContract.PagePresenter.NodeData) =
+        presenter.generateNode(node)
 }

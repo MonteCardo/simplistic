@@ -1,25 +1,28 @@
 package br.com.montecardo.simplistic
 
 import br.com.montecardo.simplistic.item.ItemFragment
-import javafx.application.Application
+import javafx.scene.paint.Color
 import tornadofx.*
 
-class SimplisticApp : App(Workspace::class) {
+class SimplisticApp : App(Workspace::class, Styles::class) {
     override fun onBeforeShow(view: UIComponent) {
-        with(workspace) {
-            dock<ItemFragment>()
-
-            listOf(saveButton, deleteButton, createButton)
-                .forEach { it.removeFromParent() }
-
-            saveButton.removeFromParent()
-        }
+        workspace.dock<ItemFragment>()
     }
+}
 
-    companion object {
-        @JvmStatic
-        fun main(varargs: Array<String>) {
-            Application.launch(SimplisticApp::class.java)
+class Styles : Stylesheet() {
+    init {
+        val noPadding = box(Dimension(0.0, Dimension.LinearUnits.px))
+        listCell {
+            form {
+                backgroundColor = MultiValue(arrayOf(Color.TRANSPARENT))
+                padding = noPadding
+
+                textField {
+                    backgroundColor = MultiValue(arrayOf(Color.TRANSPARENT))
+                    padding = noPadding
+                }
+            }
         }
     }
 }
