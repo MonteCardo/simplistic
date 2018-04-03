@@ -1,13 +1,13 @@
 package br.com.montecardo.simplistic.item
 
 import br.com.montecardo.simplistic.data.Node
-import br.com.montecardo.simplistic.data.source.postgresql.PostgresRepository
+import br.com.montecardo.simplistic.data.source.PostgresRepository
 import tornadofx.Fragment
 import tornadofx.hbox
 
 class ItemFragment : Fragment(), ItemContract.PageView, ItemListView.Listener {
 
-    private val presenter = ItemPagePresenter(PostgresRepository("localhost", "simplistic", "postgres", "postgres"))
+    private val presenter = ItemPagePresenter(PostgresRepository())
 
     private var listView: ItemContract.ListView? = null
 
@@ -35,13 +35,11 @@ class ItemFragment : Fragment(), ItemContract.PageView, ItemListView.Listener {
         title = description ?: "Simplistic"
     }
 
-    override fun select(nodeId: Long) {
+    override fun select(nodeId: Long) =
         workspace.dockInNewScope<ItemFragment>(mapOf(ItemFragment::nodeId to nodeId))
-    }
 
-    override fun showRemovalDialog(node: Node) {
+    override fun showRemovalDialog(node: Node) =
         throw UnsupportedOperationException("not implemented")
-    }
 
     override fun createNode(node: ItemContract.PagePresenter.NodeData) =
         presenter.generateNode(node)
