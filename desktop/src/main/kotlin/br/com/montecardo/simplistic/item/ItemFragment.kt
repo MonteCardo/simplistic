@@ -1,12 +1,13 @@
 package br.com.montecardo.simplistic.item
 
 import br.com.montecardo.simplistic.data.Node
-import br.com.montecardo.simplistic.data.source.DummyRepository
-import tornadofx.*
+import br.com.montecardo.simplistic.data.source.postgresql.PostgresRepository
+import tornadofx.Fragment
+import tornadofx.hbox
 
 class ItemFragment : Fragment(), ItemContract.PageView, ItemListView.Listener {
 
-    private val presenter = ItemPagePresenter(DummyRepository())
+    private val presenter = ItemPagePresenter(PostgresRepository("localhost", "simplistic", "postgres", "postgres"))
 
     private var listView: ItemContract.ListView? = null
 

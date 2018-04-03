@@ -1,1 +1,6 @@
-include ':android', ':android:app', ':core', ':desktop'
+include ':core'
+include ':desktop'
+
+if (INCLUDE_ANDROID == "true") {
+    include ':android:app'
+}

@@ -23,23 +23,24 @@ class ItemListView(private val listener: Listener, private val presenter: ItemCo
         cellFormat {
             when (it) {
                 is ListItem.Existent -> presenter.bind(ItemHolder(this), it.item)
-                is ListItem.Creator -> {
-                    graphic = form {
-                        textfield("+ Add item") {
-                            setOnMouseClicked { text = "" }
-                            setOnKeyPressed {
-                                if (it.code == KeyCode.ENTER) {
-                                    listener.createNode(NodeData(text))
-                                }
-                            }
-                        }
-                    }
-                }
+                is ListItem.Creator -> graphic = createAddNewButton()
             }
         }
 
         hgrow = Priority.ALWAYS
     }
+
+    private fun createAddNewButton() =
+        form {
+            textfield("+ Add item") {
+                setOnMouseClicked { text = "" }
+                setOnKeyPressed {
+                    if (it.code == KeyCode.ENTER) {
+                        listener.createNode(NodeData(text))
+                    }
+                }
+            }
+        }
 
     override fun replaceData(items: List<Node>) = setItems(convertToList(items).observable())
 
