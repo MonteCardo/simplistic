@@ -9,7 +9,7 @@ class ItemFragment : Fragment(), ItemContract.PageView, ItemListView.Listener {
 
     private val presenter = ItemPagePresenter(PostgresRepository())
 
-    private var listView: ItemContract.ListView? = null
+    private var listView: ItemListView? = null
 
     private val nodeId: Long? by param()
 
@@ -33,6 +33,10 @@ class ItemFragment : Fragment(), ItemContract.PageView, ItemListView.Listener {
 
     override fun setDescription(description: String?) {
         title = description ?: "Simplistic"
+    }
+
+    override fun changeFocusAfterCreation() {
+        listView?.giveFocusToNewItem()
     }
 
     override fun select(nodeId: Long) =

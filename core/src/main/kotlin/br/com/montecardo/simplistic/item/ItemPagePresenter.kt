@@ -45,6 +45,7 @@ class ItemPagePresenter(private val repository: Repository) :
     override fun generateNode(data: NodeData) {
         repository.saveNode(Node(nodeId, data.nodeDescription))
         refresh()
+        view?.changeFocusAfterCreation()
     }
 
     override fun removeNode(nodeId: Long) {

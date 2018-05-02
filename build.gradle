@@ -1,7 +1,7 @@
 allprojects {
     buildscript {
         ext.support_version = '27.1.0'
-        ext.kotlin_version = '1.2.31'
+        ext.kotlin_version = '1.2.40'
         ext.room_version = '1.1.0-beta1'
         ext.slf4j_version = '1.7.25'
 
@@ -11,7 +11,7 @@ allprojects {
         }
 
         dependencies {
-            classpath 'com.android.tools.build:gradle:3.2.0-alpha08'
+            classpath 'com.android.tools.build:gradle:3.2.0-alpha13'
             classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         } 
     }

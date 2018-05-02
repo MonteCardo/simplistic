@@ -3,6 +3,7 @@ package br.com.montecardo.simplistic.item
 import android.content.Context
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -46,6 +47,10 @@ class ItemFragment : DaggerFragment(), ItemContract.PageView {
         list_view.layoutManager = LinearLayoutManager(context)
         list_view.adapter = adapter
         presenter.onAttach(adapter)
+    }
+
+    override fun changeFocusAfterCreation() {
+        Log.d(ItemFragment::class.simpleName, "No focus to change yet")
     }
 
     override fun setDescription(description: String?) = listener.setTabName(description)

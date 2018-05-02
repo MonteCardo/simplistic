@@ -38,6 +38,11 @@ object ItemContract {
          * @param node Node to ask for removal
          */
         fun showRemovalDialog(node: Node)
+
+        /**
+         * Change focus on creation of a node
+         */
+        fun changeFocusAfterCreation()
     }
 
     interface PagePresenter : PersistentPresenter<PageView, PageState> {
